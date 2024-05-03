@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="5897aaf793310210c726b4697bba101f" extends="task" label="resolutions" max_length="40" name="x_552448_relolutio_resolutions" type="collection"/>
+</database>
