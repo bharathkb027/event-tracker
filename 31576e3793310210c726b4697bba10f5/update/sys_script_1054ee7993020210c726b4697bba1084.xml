@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>cmn_location</collection>
+        <condition>current.street.changes() || current.city.changes() || current.state.changes() || current.zip.changes() || current.country.changes()</condition>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Offset demo</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+
+if (current != null) {
+var street = new String(current.street);
+street = street.replaceAll("\r","");
+street = street.replaceAll("\n"," ");
+street = street.replaceAll(" ","+");
+
+
+var city = new String(current.city).replaceAll(" ","+");
+var state = new String(current.state).replaceAll(" ","+");
+var zip = new String(current.zip).replaceAll(" ","+");
+
+
+var address = "address=" + street + "," + city + "," + state + "," + zip + "&key='AIzaSyDAZKCqqwuMsUF-bpxO_y_3WZT1RLoYq7I";
+
+
+var ws = new HTTPAdaptor("https://maps.googleapis.com/maps/api/geocode/json?");
+var ret = ws.doGet(address);
+
+var lat = 0,
+lng = 0;
+
+try {
+var output = new JSONParser().parse(ret);
+
+
+if (output.status == "OK") {
+
+
+lat = output['results'][0]['geometry']['location']['lat']; //process the o/p to fetch latitude
+lng = output['results'][0]['geometry']['location']['lng']; //process the o/p to fetch longitude
+
+
+current.latitude = lat; //set the latitude
+current.longitude = lng; //set the longitude
+}
+
+else {
+
+gs.logErr("Get_Lat_Long Lookup Error: " + output.status);
+
+gs.logErr("Address: " + address);
+gs.logErr("API Response: " + ret);
+}
+
+
+} catch (err) {
+gs.logErr("Geocoding error: " + jsonOutput);
+}
+}
+
+})(current, previous);
+
+ ]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-05-09 13:08:31</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1054ee7993020210c726b4697bba1084</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Offset demo</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="relolution" source="x_552448_relolutio">31576e3793310210c726b4697bba10f5</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="relolution">31576e3793310210c726b4697bba10f5</sys_scope>
+        <sys_update_name>sys_script_1054ee7993020210c726b4697bba1084</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-05-09 13:08:31</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=1054ee7993020210c726b4697bba1084"/>
+</record_update>
